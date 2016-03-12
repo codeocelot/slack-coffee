@@ -31,7 +31,7 @@ var team2 = [
 ]
 
 // s, m, h, day, month, dayOfWeek
-//var c = new cron('* * 16 * * 1-5', 
+//var c = new cron('* * 16 * * 1-5',
 //    () => {},
 //    () => runCron,
 //    false,
@@ -57,7 +57,7 @@ function notifySlack(person){
   }
   request(
       {
-        url: 'https://hooks.slack.com/services/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',
+        url: PROCESS.ENV.SLACK_SECRET,
         method: "POST",
         json: message
       },
@@ -74,4 +74,4 @@ module.exports = {
   notifySlack
 }
 
-
+console.log('run main.js');
