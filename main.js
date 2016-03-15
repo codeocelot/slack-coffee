@@ -57,7 +57,8 @@ function notifySlack(person){
   }
   request(
       {
-        url: PROCESS.ENV.SLACK_SECRET,
+//        url: PROCESS.ENV.SLACK_SECRET,
+          url: "https://hooks.slack.com/services/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",
         method: "POST",
         json: message
       },
