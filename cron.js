@@ -1,2 +1,2 @@
 var app = require('./main');
-app.runCron();
+app.runServices();
