@@ -1,50 +1,48 @@
+'use strict'
 var request = require('request');
-var cron = require('cron').CronJob;
 
 var team = [
-  "Alexi",
-  "Maria",
-  "Haris",
-  "Joey",
-  "Matt",
-  "Helen",
-  "Rachel",
-  "Ruggero",
-  "Ruihua",
-  "Ruth",
-  "Seb",
-  "Tom"
-]
-
-var team2 = [
   "alexi",
-  "maria",
   "haris",
   "hcraig",
   "joey",
   "matt",
-  "rachel",
-  "ruihua",
+  "connor",
+  "siva",
   "ruth",
+  "ruggero",
   "sebastien_dery",
-  "tom"
-]
+  "tom",
+  "joe",
+  "abdulhuq811",
+  "jm",
+];
 
-function runCron(){
-  var person = selectPerson();
-  notifySlack(person);
+function getCohort(){
+  const persons = new Set();
+  while(persons.size < 3){
+    persons.add(selectPerson())
+  }
+  return Array.from(persons);
+}
+
+function runServices(){
+  const cohort = getCohort();
+  notifyCoffee(cohort[0]);
+  notifyTrash(cohort[1]);
+  notifyDishwasher(cohort[2]);
 }
 
 function selectPerson(){
-  var i = Math.floor(Math.random() * (team.length-1));
-  var person = team2[i];
+  const i = Math.floor(Math.random() * (team.length));
+  const person = team[i];
   return person;
 }
 
-function notifySlack(person){
-  var message = {
+function notifyCoffee(person){
+  const message = {
     "username": "coffee_bot",
-    "channel" : "#caffeine",
+    "channel" : "#chores",
     "text" : `Congratulations @${person}, you have been randomly selected to clean the caffeine dispenser today.`,
   }
   request(
@@ -60,10 +58,47 @@ function notifySlack(person){
   )
 }
 
-module.exports = {
-  runCron,
-  selectPerson,
-  notifySlack
+function notifyTrash(person){
+  const message = {
+    "username": "trash_bot",
+    "channel" : "#chores",
+    "text" : `Congratulations @${person}, you have been randomly selected to take out the trash today.`,
+  }
+  request(
+      {
+        url: "https://hooks.slack.com/services/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",
+        method: "POST",
+        json: message
+      },
+      (err, response, body) => {
+        if(err) console.error(err);
+        else console.info(response.statusCode,body);
+      }
+  )
 }
 
-console.log('run main.js');
+function notifyDishwasher(person){
+  let message = {
+    "username": "dishwasher_bot",
+    "channel" : "#chores",
+    "text" : `Congratulations @${person}, you have been randomly selected to run the dishwasher today.`,
+  }
+  request(
+      {
+        url: "https://hooks.slack.com/services/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",
+        method: "POST",
+        json: message
+      },
+      (err, response, body) => {
+        if(err) console.error(err);
+        else console.info(response.statusCode,body);
+      }
+  )
+}
+
+module.exports = {
+  selectPerson,
+  runServices,
+  team,
+  getCohort
+}
