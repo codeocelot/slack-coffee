@@ -1,5 +1,8 @@
 'use strict'
 var request = require('request');
+const fs = require('fs');
+const STATS_FILE_PATH = './stats.json'
+const CHANNEL = '#chores'
 
 var team = [
   "alexi",
@@ -31,6 +34,8 @@ function runServices(){
   notifyCoffee(cohort[0]);
   notifyTrash(cohort[1]);
   notifyDishwasher(cohort[2]);
+
+  updateStats(cohort,(err,data) => writeStatsFile(data,(err,res)=>{console.log(err||res)}))
 }
 
 function selectPerson(){
@@ -39,10 +44,36 @@ function selectPerson(){
   return person;
 }
 
+function updateStats(cohort,cb){
+  cb = cb || (() => {});
+  readStatsFile(
+    (err, stats) => {
+      if(err) throw err;
+      cohort.forEach(c => {
+        debugger;
+        if(!stats[c]) {
+          stats[c] = 1;
+        } else {
+          stats[c]++;
+        }
+      });
+      cb(err,stats)
+    }
+  )
+}
+
+function readStatsFile(cb){
+  fs.readFile(STATS_FILE_PATH,'utf8',(err,data)=> err ? cb(err) : cb(null,JSON.parse(data)))
+}
+
+function writeStatsFile(data,cb){
+  fs.writeFile(STATS_FILE_PATH,JSON.stringify(data),cb)
+}
+
 function notifyCoffee(person){
   const message = {
     "username": "coffee_bot",
-    "channel" : "#chores",
+    "channel" : CHANNEL ,
     "text" : `Congratulations @${person}, you have been randomly selected to clean the caffeine dispenser today.`,
   }
   request(
@@ -61,7 +92,7 @@ function notifyCoffee(person){
 function notifyTrash(person){
   const message = {
     "username": "trash_bot",
-    "channel" : "#chores",
+    "channel" : CHANNEL ,
     "text" : `Congratulations @${person}, you have been randomly selected to take out the trash today.`,
   }
   request(
@@ -80,7 +111,7 @@ function notifyTrash(person){
 function notifyDishwasher(person){
   let message = {
     "username": "dishwasher_bot",
-    "channel" : "#chores",
+    "channel" : CHANNEL ,
     "text" : `Congratulations @${person}, you have been randomly selected to run the dishwasher today.`,
   }
   request(
