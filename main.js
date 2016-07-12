@@ -1,28 +1,25 @@
+'use strict'
 var request = require('request');
-var cron = require('cron').CronJob;
 
 var team = [
   "alexi",
-  "maria",
   "haris",
   "hcraig",
   "joey",
   "matt",
-  "rachel",
   "connor",
   "siva",
   "ruth",
+  "ruggero",
   "sebastien_dery",
-  "tom"
-]
-
-function runCron(){
-  var person = selectPerson();
-  notifySlack(person);
-}
+  "tom",
+  "joe",
+  "abdulhuq811",
+  "jm",
+];
 
 function getCohort(){
-  var persons = new Set();
+  const persons = new Set();
   while(persons.size < 3){
     persons.add(selectPerson())
   }
@@ -30,20 +27,20 @@ function getCohort(){
 }
 
 function runServices(){
-  let cohort = getCohort();
-  notifyCoffee(workers[0]);
-  notifyTrash(workers[1]);
-  notifyDishwasher(workers[2]);
+  const cohort = getCohort();
+  notifyCoffee(cohort[0]);
+  notifyTrash(cohort[1]);
+  notifyDishwasher(cohort[2]);
 }
 
 function selectPerson(){
-  var i = Math.floor(Math.random() * (team.length));
-  var person = team[i];
+  const i = Math.floor(Math.random() * (team.length));
+  const person = team[i];
   return person;
 }
 
 function notifyCoffee(person){
-  var message = {
+  const message = {
     "username": "coffee_bot",
     "channel" : "#chores",
     "text" : `Congratulations @${person}, you have been randomly selected to clean the caffeine dispenser today.`,
@@ -62,7 +59,7 @@ function notifyCoffee(person){
 }
 
 function notifyTrash(person){
-  var message = {
+  const message = {
     "username": "trash_bot",
     "channel" : "#chores",
     "text" : `Congratulations @${person}, you have been randomly selected to take out the trash today.`,
@@ -81,7 +78,7 @@ function notifyTrash(person){
 }
 
 function notifyDishwasher(person){
-  var message = {
+  let message = {
     "username": "dishwasher_bot",
     "channel" : "#chores",
     "text" : `Congratulations @${person}, you have been randomly selected to run the dishwasher today.`,
@@ -100,7 +97,6 @@ function notifyDishwasher(person){
 }
 
 module.exports = {
-  runCron,
   selectPerson,
   runServices,
   team,
