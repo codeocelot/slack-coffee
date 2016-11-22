@@ -1,24 +1,26 @@
 'use strict'
-var request = require('request');
+const request = require('request');
 const fs = require('fs');
-const STATS_FILE_PATH = './stats.json'
+const STATS_FILE_PATH = '/Users/jrg/test/slack-coffee/stats.json'
 const CHANNEL = '#chores'
 
-var team = [
-  "alexi",
+const team = [
+  "colleen",
+  "connor",
   "haris",
   "hcraig",
+  "joe",
   "joey",
+  "jm",
+  "kelly",
+  "kimmy",
   "matt",
-  "connor",
-  "siva",
   "ruth",
   "ruggero",
+  "siva",
   "sebastien_dery",
   "tom",
-  "joe",
-  "abdulhuq811",
-  "jm",
+  "pjh",
 ];
 
 function getCohort(){
